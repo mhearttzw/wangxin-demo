@@ -1,12 +1,15 @@
 package com.wangxin.springboot.controller;
 
+import com.wangxin.springboot.common.annotation.Log;
 import com.wangxin.springboot.common.constant.UserResult;
 import com.wangxin.springboot.common.constant.UserResultConstant;
+import com.wangxin.springboot.common.util.LogAnnotationWrapperUtil;
 import com.wangxin.springboot.model.Product;
 import com.wangxin.springboot.other.Merchandise;
 import com.wangxin.springboot.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,9 +38,11 @@ public class ApiController {
     @Autowired
     private Merchandise merchandise;
 
+    @Log(logStr = "aop日志测试！")
     @ApiOperation(value = "欢迎方法，返回字符串！") //描述方法的作用
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
-    public String say() {
+    public String say() throws NotFoundException {
+        LogAnnotationWrapperUtil.get().setLog("这是api接口的say方法！");
         return "Hello spring boot!" + merchandise.getCar();
     }
 

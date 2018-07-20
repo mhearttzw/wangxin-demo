@@ -16,6 +16,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfiguration {
+    //createRestApi() 方法指定扫描的包会生成文档,默认是显示所有接口,可以用@ApiIgnore注解标识该接口不显示
     @Bean
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)

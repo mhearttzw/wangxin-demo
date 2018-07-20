@@ -1,6 +1,6 @@
 package com.wangxin.springboot.service.impl;
 
-import com.wangxin.springboot.common.annotation.log.Log;
+import com.wangxin.springboot.common.annotation.Log;
 import com.wangxin.springboot.mapper.UserMapper;
 import com.wangxin.springboot.model.Product;
 import com.wangxin.springboot.service.UserService;
@@ -15,6 +15,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
+    @Log(logStr = "aop日志测试！")
     @Override
     public List<Product> selectProductAll() {
         return userMapper.selectProductAll();

@@ -1,4 +1,4 @@
-package com.wangxin.springboot.common.annotation.log;
+package com.wangxin.springboot.common.annotation;
 
 import java.lang.annotation.*;
 
