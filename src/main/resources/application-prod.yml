@@ -1,0 +1,21 @@
+## 使用yml文件替代properties文件，在spring boot启动时默认加载此文件 ##
+## database ##
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/wangxin?characterEncoding=UTF-8
+    username: root
+    password: root
+
+## server port ##
+server:
+  port: 8082
+
+## 测试value注解注入 ##
+x: echlon
+y: smash
+content: "x: ${x}, y: ${y}"
+product:
+  car: 1
+  bed: 2

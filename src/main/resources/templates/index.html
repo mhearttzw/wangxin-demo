@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Invest</title>
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+
+<div class="box">
+    <div class="container-4">
+        <input type="search" id="search" placeholder="Search by name" />
+        <button class="icon" id="searchButton"><i class="fa fa-search"></i></button>
+    </div>
+    <div class="main">
+        <div class="sub-main">
+            <button class="button-one" id="insertButton">增加</button>
+        </div>
+    </div>
+</div>
+
+<table class="rwd-table">
+    <tr>
+        <th>产品名称</th>
+        <th>计息方式</th>
+        <th>利率</th>
+        <th>还款方式</th>
+        <th>加入人数</th>
+        <th>编辑</th>
+        <th>删除</th>
+    </tr>
+    <tr th:each="item : ${productList}" >
+        <td data-th="" th:text="${item.getName()}"></td>
+        <td data-th="" th:text="${item.getInvestmentHorizon()}"></td>
+        <td data-th="" th:text="${item.getInterestRate()}"></td>
+        <td data-th="" th:text="${item.getPaybackMethod()}"></td>
+        <td data-th="" th:text="${item.getPersonJoined()}"></td>
+        <td class="editButton" th:data-th="${item.getId()}" th:text="编辑" onclick="editProduct(this)"></td>
+        <td class="deleteButton" th:data-th="${item.getId()}" th:text="删除" onclick="deleteProduct(this)"></td>
+    </tr>
+</table>
+
+<script>
+        function editProduct(item) {
+            var productId = item.getAttribute("data-th");
+            console.log("productId:" + productId);
+            window.location.href = "/product/edit/show?id=" + productId;
+        }
+
+        function deleteProduct(item) {
+            var productId = item.getAttribute("data-th");
+            console.log("productId:" + productId);
+            $.ajax({
+                url: "/product/delete/",
+                async: false,
+                data: {
+                    "id": productId
+                }
+            });
+            window.location.href = "/product/all";
+        }
+
+        // 获取点击框
+        var searchButton = document.getElementById("searchButton");
+
+        var insertButton = document.getElementById("insertButton");
+
+        // 添加鼠标点击搜索事件
+        searchButton.onclick = function () {
+            // 获取输入框元素
+            var name = $("#search").val();
+            console.log("sun:" + name);
+            window.location.href = "/product/search?name=" + name;
+            $.ajax({
+                url: "/product/search/",
+                async: false,
+                data: {
+                    "name": name
+                }
+            });
+        };
+
+        insertButton.onclick = function (ev) {
+            window.location.href = "/product/insert/show";
+        };
+
+
+</script>
+</body>
+</html>

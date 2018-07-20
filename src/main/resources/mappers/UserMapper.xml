@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangxin.springboot.mapper.UserMapper">
+
+    <resultMap id="ProductMap" type="com.wangxin.springboot.model.Product">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="count_type" jdbcType="VARCHAR" property="countType"/>
+        <result column="minimum_amount" jdbcType="DECIMAL" property="minimumAmount"/>
+        <result column="interest_rate" jdbcType="DECIMAL" property="interestRate"/>
+        <result column="annotation" jdbcType="VARCHAR" property="annotation"/>
+        <result column="person_joined" jdbcType="INTEGER" property="personJoined"/>
+        <result column="investment_horizon" jdbcType="INTEGER" property="investmentHorizon"/>
+        <result column="payback_method" jdbcType="VARCHAR" property="paybackMethod"/>
+    </resultMap>
+
+    <!-- 首页展示产品列表 -->
+    <select id="selectProductAll" resultMap="ProductMap">
+        SELECT
+          id, name, count_type, minimum_amount, interest_rate, annotation, person_joined,
+          investment_horizon, payback_method
+        FROM product
+    </select>
+
+    <!-- 根据名称查询产品 -->
+    <select id="selectProductByName" resultMap="ProductMap">
+        SELECT
+        id, name, count_type, minimum_amount, interest_rate, annotation, person_joined,
+        investment_horizon, payback_method
+        FROM product
+        <where>
+            <if test="name != null and name != ''">
+                name LIKE '%' #{name,jdbcType=VARCHAR} '%'
+            </if>
+        </where>
+    </select>
+
+    <!-- 根据id查询产品 -->
+    <select id="selectProductById" resultMap="ProductMap">
+        SELECT
+        id, name, count_type, minimum_amount, interest_rate, annotation, person_joined,
+        investment_horizon, payback_method
+        FROM product
+        <where>
+            <if test="id != null and id != ''">
+                id = #{id,jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
+
+    <!-- 根据id修改产品 -->
+    <update id="updateProductById" parameterType="com.wangxin.springboot.model.Product">
+        UPDATE product
+        SET name = #{name,jdbcType=VARCHAR}, count_type=#{countType,jdbcType=VARCHAR},
+            investment_horizon = #{investmentHorizon,jdbcType=INTEGER},
+            interest_rate = #{interestRate,jdbcType=DECIMAL},
+            person_joined = #{personJoined,jdbcType=INTEGER}
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <insert id="insertProduct" parameterType="com.wangxin.springboot.model.Product">
+        INSERT INTO product
+        (name, count_type, minimum_amount, interest_rate, annotation, person_joined, investment_horizon, payback_method)
+        VALUES (#{name,jdbcType=VARCHAR}, #{countType,jdbcType=VARCHAR}, #{minimumAmount,jdbcType=DECIMAL},
+                #{interestRate,jdbcType=DECIMAL}, #{annotation,jdbcType=VARCHAR},
+                #{personJoined,jdbcType=INTEGER}, #{investmentHorizon,jdbcType=INTEGER},
+                #{paybackMethod,jdbcType=INTEGER})
+    </insert>
+
+    <delete id="deleteProduct">
+        DELETE FROM product
+        <where>
+            <if test="id != null and id != ''">
+                id = #{id,jdbcType=INTEGER}
+            </if>
+        </where>
+    </delete>
+
+
+</mapper>
