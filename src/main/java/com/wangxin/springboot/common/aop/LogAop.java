@@ -22,26 +22,37 @@ public class LogAop {
     private Logger logger = LoggerFactory.getLogger(LogAop.class);
 
     // 设置切点表达式，匹配com.wangxin.springboot包及其子包下面所有类的public方法
-    @Pointcut("execution(* com.wangxin.springboot.controller..*(..))")
+    // 配置多个切点
+    @Pointcut("execution(* com.wangxin.springboot.controller..*(..))||execution(* com.wangxin.springboot.service..*(..))")
     private void pointcut(){
 
     }
 
     @After(value = "pointcut()")
     public void After(JoinPoint joinPoint) throws NotFoundException, ClassNotFoundException {
-        // 拿到切点的类名、方法名
+        // 拿到切点的类名、方法名、目标方法的参数对象
         String className = joinPoint.getTarget().getClass().getName();
         String methodName = joinPoint.getSignature().getName();
+        Object[] args = joinPoint.getArgs();
         String logStr = LogAnnotationUtil.getLogAnnotationUtil().getAnnotationFieldValue(className,
                 methodName, Log.class.getName(), "logStr");
         if (!StringUtils.isEmpty(logStr)) {
-            logger.error("获取日志：" + logStr);
-            // debug级别日志什么时候会出现呢？
+            logger.error("类名：" + className + "\n");
+            logger.error("函数名：" + methodName + "\n");
+            for (int i = 0; i < args.length; i++) {
+                logger.error("参数名：" + args[i]);
+            }
+            // TODO debug级别日志什么时候会出现呢？
             logger.debug("获取日志：" + logStr);
-            logger.error("error级别日志：" + logStr);
+            logger.error("详细日志信息：" + logStr);
             // 数据库、文件记录操作
             // TODO
-            LogFileUtil.write(logStr);
+            LogFileUtil.write("类名：" + className + "\r\n");
+            LogFileUtil.write("函数名：" + methodName + "\r\n");
+            for (int i = 0; i < args.length; i++) {
+                LogFileUtil.write("参数名：" + args[i]);
+            }
+            LogFileUtil.write("\r\n详细日志信息：" + logStr);
         }
     }
 

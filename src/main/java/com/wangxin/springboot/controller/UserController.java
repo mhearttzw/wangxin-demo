@@ -1,7 +1,9 @@
 package com.wangxin.springboot.controller;
 
+import com.wangxin.springboot.common.annotation.Log;
 import com.wangxin.springboot.model.Product;
 import com.wangxin.springboot.service.UserService;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,8 +20,9 @@ public class UserController {
     /**
      * 查询所有产品列表
      */
+    @Log(logStr = "aop日志测试！")
     @RequestMapping(value = "/product/all")
-    public String selectProductAll(Model model) {
+    public String selectProductAll(Model model) throws NotFoundException {
         model.addAttribute("productList", userService.selectProductAll());
         return "index";
     }
@@ -27,6 +30,7 @@ public class UserController {
     /**
      * 根据名称查询产品
      */
+    @Log(logStr = "aop日志测试！")
     @RequestMapping(value = "/product/search", method = RequestMethod.GET)
     public String selectProductByName(Model model,
                                       @RequestParam("name") String name) {
@@ -39,6 +43,7 @@ public class UserController {
     /**
      * 产品编辑页展示
      */
+    @Log(logStr = "aop日志测试！")
     @RequestMapping(value = "/product/edit/show", method = RequestMethod.GET)
     public String showProductById(Model model,
                            @RequestParam("id") int id) {
@@ -50,9 +55,10 @@ public class UserController {
     /**
      * 产品编辑提交
      */
+    @Log(logStr = "aop日志测试！")
     @RequestMapping(value = "/product/edit", method = RequestMethod.POST)
     public String updateProductById(Model model,
-                                    @ModelAttribute Product product) {
+                                    @ModelAttribute Product product) throws NotFoundException {
         int result = userService.updateProductById(product);
         if (result == 1) {
             List<Product> productList = userService.selectProductAll();
@@ -67,6 +73,7 @@ public class UserController {
     /**
      * 产品增加页展示
      */
+    @Log(logStr = "aop日志测试！")
     @RequestMapping(value = "/product/insert/show", method = RequestMethod.GET)
     public String insertProduct() {
         return "insert";
@@ -75,9 +82,10 @@ public class UserController {
     /**
      * 增加产品
      */
+    @Log(logStr = "aop日志测试！")
     @RequestMapping(value = "/product/insert", method = RequestMethod.POST)
     public String showInsertProduct(Model model,
-                                @ModelAttribute Product product) {
+                                @ModelAttribute Product product) throws NotFoundException {
         int result = userService.insertProduct(product);
         if (result == 1) {
             List<Product> productList = userService.selectProductAll();
@@ -91,9 +99,10 @@ public class UserController {
     /**
      * 删除产品
      */
+    @Log(logStr = "aop日志测试！")
     @RequestMapping(value = "/product/delete", method = RequestMethod.GET)
     public String deleteProductById(Model model,
-                                    @RequestParam("id") int id) {
+                                    @RequestParam("id") int id) throws NotFoundException {
         int result = userService.deleteProduct(id);
         if (result == 1) {
             List<Product> productList = userService.selectProductAll();

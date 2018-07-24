@@ -48,7 +48,7 @@ public class ApiController {
 
     @ApiOperation(value = "查询产品总数！")
     @RequestMapping(value = "/product/all", method = RequestMethod.GET)
-    public UserResult selectProductAll() {
+    public UserResult selectProductAll() throws NotFoundException {
         UserResult urs;
         List<Product> productList = userService.selectProductAll();
         urs = new UserResult(UserResultConstant.SUCCESS, productList);
