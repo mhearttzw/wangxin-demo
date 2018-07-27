@@ -9,6 +9,7 @@ import com.wangxin.springboot.service.UserService;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
@@ -25,17 +26,24 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    @Autowired
+    private StringRedisTemplate srt;
+
+    private final String key = "allProducts:";
+
     @Log(logStr = "aop日志测试！")
     @Override
     public List<Product> selectProductAll() throws NotFoundException {
         // 从缓存中获取城市信息
-        String key = "allProducts:";
-        ValueOperations<String, List<Product>> operations = redisTemplate.opsForValue();
+        // String key = "allProducts:";
+        //ValueOperations<String, List<Product>> operations = redisTemplate.opsForValue();
+        ValueOperations<String, String> srtOperation = srt.opsForValue();
 
         // 缓存存在
-        boolean hasKey = redisTemplate.hasKey(key);
+        boolean hasKey = srt.hasKey(key);
         if (hasKey) {
-            List<Product> productList = operations.get(key);
+            // json字符串解析成对象list
+            List<Product> productList = JSON.parseArray(srtOperation.get(key), Product.class);
             LogAnnotationWrapperUtil.get().setLog("从缓存中读取数据：" + JSON.toJSONString(productList));
             return productList;
         }
@@ -44,7 +52,8 @@ public class UserServiceImpl implements UserService {
         List<Product> productList = userMapper.selectProductAll();
 
         // 插入缓存
-        operations.set(key, productList);
+        //operations.set(key, productList);
+        srtOperation.set(key, JSON.toJSONString(productList));
         LogAnnotationWrapperUtil.get().setLog("产品列表缓存：" + JSON.toJSONString(productList));
         return productList;
     }
@@ -63,9 +72,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public int updateProductById(Product product) throws NotFoundException {
         int flag = userMapper.updateProductById(product);
-        String key = "产品列表缓存：";
-        if (flag==1 && redisTemplate.hasKey(key)) {
-            redisTemplate.delete(key);
+        // String key = "产品列表缓存：";
+        if (flag==1 && srt.hasKey(key)) {
+            srt.delete(key);
             LogAnnotationWrapperUtil.get().setLog("删除产品列表缓存！");
         }
         return flag;
@@ -75,9 +84,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public int insertProduct(Product product) throws NotFoundException {
         int flag = userMapper.insertProduct(product);
-        String key = "产品列表缓存：";
-        if (flag==1 && redisTemplate.hasKey(key)) {
-            redisTemplate.delete(key);
+        // String key = "产品列表缓存：";
+        if (flag==1 && srt.hasKey(key)) {
+            srt.delete(key);
             LogAnnotationWrapperUtil.get().setLog("删除产品列表缓存！");
         }
         return flag;
@@ -87,9 +96,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public int deleteProduct(int id) throws NotFoundException {
         int flag = userMapper.deleteProduct(id);
-        String key = "产品列表缓存：";
-        if (flag==1 && redisTemplate.hasKey(key)) {
-            redisTemplate.delete(key);
+        // String key = "产品列表缓存：";
+        if (flag==1 && srt.hasKey(key)) {
+            srt.delete(key);
             LogAnnotationWrapperUtil.get().setLog("删除产品列表缓存！");
         }
         return flag;

@@ -37,8 +37,8 @@ public class LogAop {
         String logStr = LogAnnotationUtil.getLogAnnotationUtil().getAnnotationFieldValue(className,
                 methodName, Log.class.getName(), "logStr");
         if (!StringUtils.isEmpty(logStr)) {
-            logger.error("类名：" + className + "\n");
-            logger.error("函数名：" + methodName + "\n");
+            logger.error("\n类名：" + className);
+            logger.error("函数名：" + methodName);
             for (int i = 0; i < args.length; i++) {
                 logger.error("参数名：" + args[i]);
             }
@@ -50,7 +50,7 @@ public class LogAop {
             LogFileUtil.write("类名：" + className + "\r\n");
             LogFileUtil.write("函数名：" + methodName + "\r\n");
             for (int i = 0; i < args.length; i++) {
-                LogFileUtil.write("参数名：" + args[i]);
+                LogFileUtil.write("参数名：" + args[i] + "\r\n");
             }
             LogFileUtil.write("\r\n详细日志信息：" + logStr);
         }

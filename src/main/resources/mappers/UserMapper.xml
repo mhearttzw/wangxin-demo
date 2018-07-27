@@ -58,13 +58,18 @@
         WHERE id = #{id,jdbcType=INTEGER}
     </update>
 
+    <!-- 添加单条产品信息 -->
     <insert id="insertProduct" parameterType="com.wangxin.springboot.model.Product">
         INSERT INTO product
         (name, count_type, minimum_amount, interest_rate, annotation, person_joined, investment_horizon, payback_method)
-        VALUES (#{name,jdbcType=VARCHAR}, #{countType,jdbcType=VARCHAR}, #{minimumAmount,jdbcType=DECIMAL},
+        SELECT #{name,jdbcType=VARCHAR}, #{countType,jdbcType=VARCHAR}, #{minimumAmount,jdbcType=DECIMAL},
                 #{interestRate,jdbcType=DECIMAL}, #{annotation,jdbcType=VARCHAR},
                 #{personJoined,jdbcType=INTEGER}, #{investmentHorizon,jdbcType=INTEGER},
-                #{paybackMethod,jdbcType=INTEGER})
+                #{paybackMethod}
+#         为什么paybackMethod加入jdbcType=INTEGER就报错啊啊啊啊啊啊？
+        FROM dual
+        WHERE NOT EXISTS (SELECT 1 FROM product
+                          WHERE name = #{name,jdbcType=VARCHAR})
     </insert>
 
     <delete id="deleteProduct">

@@ -23,11 +23,11 @@ public enum UserResultConstant {
 
     public int code;
 
-    public String message;
+    public String msg;
 
-    UserResultConstant(int code, String message) {
+    UserResultConstant(int code, String msg) {
         this.code = code;
-        this.message = message;
+        this.msg = msg;
     }
 
     public int getCode() {
@@ -38,11 +38,11 @@ public enum UserResultConstant {
         this.code = code;
     }
 
-    public String getMessage() {
-        return message;
+    public String getmsg() {
+        return msg;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setmsg(String msg) {
+        this.msg = msg;
     }
 }

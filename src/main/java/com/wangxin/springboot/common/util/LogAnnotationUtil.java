@@ -1,9 +1,6 @@
 package com.wangxin.springboot.common.util;
 
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.NotFoundException;
+import javassist.*;
 import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.ConstPool;
 import javassist.bytecode.MethodInfo;
@@ -43,6 +40,10 @@ public class LogAnnotationUtil {
     public void setAnnotationUtilFieldValue(String className, String methodName, String annoName,
                                             String fieldName, String fieldValue) throws NotFoundException{
         ClassPool classPool = ClassPool.getDefault();
+        // 下面两段新加
+        ClassClassPath classPath = new ClassClassPath((this.getClass()));
+        classPool.insertClassPath(classPath);
+        // 此行在Linux部署时报错
         CtClass ct = classPool.get(className);
         // getDeclaredMethod()返回类或接口声明的所有方法，包括公共、保护、默认（包）访问和私有方法，
         // 但不包括继承的方法。
@@ -62,6 +63,10 @@ public class LogAnnotationUtil {
     public String getAnnotationFieldValue(String className, String methodName, String annoName,
                                           String fieldName) throws NotFoundException {
         ClassPool classPool = ClassPool.getDefault();
+        // 下面两段新加
+        ClassClassPath classPath = new ClassClassPath((this.getClass()));
+        classPool.insertClassPath(classPath);
+        // 此行在Linux部署时报错
         CtClass ctClass = classPool.get(className);
         CtMethod ctMethod = ctClass.getDeclaredMethod(methodName);
         MethodInfo methodInfo = ctMethod.getMethodInfo();

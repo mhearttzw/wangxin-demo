@@ -92,7 +92,7 @@ public class UserController {
             model.addAttribute("productList", productList);
             return "index";
         } else {
-            return "error11";
+            return "index";
         }
     }
 

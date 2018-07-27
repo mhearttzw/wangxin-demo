@@ -10,16 +10,16 @@ public class BaseResult {
     /**
      * 状态码说明
      */
-    public String message;
+    public String msg;
 
     /**
      * 返回结果
      */
     public Object data;
 
-    public BaseResult(int code, String message, Object data) {
+    public BaseResult(int code, String msg, Object data) {
         this.code = code;
-        this.message = message;
+        this.msg = msg;
         this.data = data;
     }
 
@@ -31,12 +31,12 @@ public class BaseResult {
         this.code = code;
     }
 
-    public String getMessage() {
-        return message;
+    public String getmsg() {
+        return msg;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setmsg(String msg) {
+        this.msg = msg;
     }
 
     public Object getData() {

@@ -12,9 +12,8 @@ import io.swagger.annotations.ApiOperation;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.List;
@@ -47,11 +46,62 @@ public class ApiController {
     }
 
     @ApiOperation(value = "查询产品总数！")
-    @RequestMapping(value = "/product/all", method = RequestMethod.GET)
+    @RequestMapping(value = "/product/show/all", method = RequestMethod.GET)
     public UserResult selectProductAll() throws NotFoundException {
         UserResult urs;
         List<Product> productList = userService.selectProductAll();
         urs = new UserResult(UserResultConstant.SUCCESS, productList);
+        return urs;
+    }
+
+    @ApiOperation(value = "根据名称模糊查询产品详情")
+    @RequestMapping(value = "/product/search/{name}", method = RequestMethod.GET)
+    public UserResult selectProductByName(@PathVariable("name") String name) {
+        UserResult urs;
+        List<Product> productList = userService.selectProductByName(name);
+        urs = new UserResult(UserResultConstant.SUCCESS, productList);
+        return urs;
+    }
+
+    @ApiOperation(value = "添加产品")
+    @RequestMapping(value = "/product/insert", method = RequestMethod.POST)
+    public UserResult showInsertProduct(@RequestParam("name") String name, @RequestParam("interestRate") double interestRate,
+                                    @RequestParam("investmentHorizon") int investmentHorizon,
+                                    @RequestParam("paybackMethod") int paybackMethod) throws NotFoundException {
+        UserResult urs;
+        Product product = new Product();
+        product.setName(name);
+        product.setInterestRate(interestRate);
+        product.setInvestmentHorizon(investmentHorizon);
+        product.setPaybackMethod(paybackMethod);
+        int result = userService.insertProduct(product);
+        if (result == 1) {
+            urs = new UserResult(UserResultConstant.SUCCESS, "新增产品成功");
+        } else {
+            urs = new UserResult(UserResultConstant.FAILED, "新增产品失败");
+        }
+        return urs;
+    }
+
+    @ApiOperation(value = "修改产品信息")
+    @RequestMapping(value = "/product/edit", method = RequestMethod.POST)
+    public UserResult updateProductById(@RequestParam("id") int id, @RequestParam("name") String name,
+                                        @RequestParam("interestRate") double interestRate,
+                                        @RequestParam("investmentHorizon") int investmentHorizon,
+                                        @RequestParam("paybackMethod") int paybackMethod) throws NotFoundException {
+        UserResult urs;
+        Product product = new Product();
+        product.setId(id);
+        product.setName(name);
+        product.setInterestRate(interestRate);
+        product.setInvestmentHorizon(investmentHorizon);
+        product.setPaybackMethod(paybackMethod);
+        int result = userService.updateProductById(product);
+        if (result == 1) {
+            urs = new UserResult(UserResultConstant.SUCCESS, "更新产品成功");
+        } else {
+            urs = new UserResult(UserResultConstant.FAILED, "更新产品失败");
+        }
         return urs;
     }
 }
