@@ -1,5 +1,7 @@
 package com.wangxin.springboot.service;
 
+import com.wangxin.springboot.model.BorrowOrder;
+import com.wangxin.springboot.model.PayOrderNotify;
 import com.wangxin.springboot.model.Product;
 import javassist.NotFoundException;
 import org.apache.ibatis.annotations.Param;
@@ -34,4 +36,14 @@ public interface UserService {
      * 删除产品
      */
     int deleteProduct(@Param("id") int id) throws NotFoundException;
+
+    /**
+     * 产品出售
+     */
+    int borrowProduct(BorrowOrder product) throws NotFoundException;
+
+    /**
+     * 订单支付
+     */
+    int payBorrowOrder(PayOrderNotify payOrderNotify);
 }

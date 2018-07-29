@@ -1,5 +1,7 @@
 package com.wangxin.springboot.mapper;
 
+import com.wangxin.springboot.model.BorrowOrder;
+import com.wangxin.springboot.model.PayOrderNotify;
 import com.wangxin.springboot.model.Product;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -37,4 +39,19 @@ public interface UserMapper {
      * 删除产品
      */
     int deleteProduct(@Param("id") int id);
+
+    /**
+     * 插入借款订单信息
+     */
+    int insertBorrowOrder(BorrowOrder borrowOrder);
+
+    /**
+     * 更新借款订单信息
+     */
+    int updateBorrowOrder(@Param("state") int state);
+
+    /**
+     * 插入支付订单信息
+     */
+    int insertPayOrder(PayOrderNotify payOrderNotify);
 }

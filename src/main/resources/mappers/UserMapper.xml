@@ -72,6 +72,7 @@
                           WHERE name = #{name,jdbcType=VARCHAR})
     </insert>
 
+    <!-- 删除单条产品信息 -->
     <delete id="deleteProduct">
         DELETE FROM product
         <where>
@@ -81,5 +82,37 @@
         </where>
     </delete>
 
+    <!-- 添加产品出售订单信息  -->
+    <insert id="insertBorrowOrder" parameterType="com.wangxin.springboot.model.BorrowOrder">
+        INSERT into borrow_order
+        (borrow_order_uuid, user_uuid, borrow_amount, product_id, state)
+        SELECT #{borrowOrderUuid,jdbcType=VARCHAR}, #{user_uuid,jdbcType=VARCHAR},
+            #{borrowAmount,jdbcType=DECIMAL}, #{productId,jdbcType=INTEGER},
+            #{state,jdbcType=TINYINT}
+        FROM dual
+        WHERE NOT exists(SELECT 1 FROM borrow_order
+                          WHERE borrow_order_uuid = #{borrowOrderUuid,jdbcType=VARCHAR})
+    </insert>
+
+    <!-- 查询订单是否存在-->
+    <select id="selectBorrowOrderAmount">
+        SELECT COUNT(*) FROM borrow_order
+        WHERE borrow_order_uuid = #{borrowOrderUuid,jdbcType=VARCHAR}
+    </select>
+
+    <update id="updateBorrowOrderToFinished">
+        UPDATE borrow_order SET state = #{state,jdbcType=TINYINT};
+    </update>
+
+    <!-- -->
+    <insert id="insertPayOrder" parameterType="com.wangxin.springboot.model.PayOrderNotify">
+        INSERT INTO pay_order_notify
+        (borrow_order_uuid, user_uuid, borrow_amount, product_id)
+        SELECT #{borrowOrderUuid,jdbcType=VARCHAR}, #{userUuid,jdbcType=VARCHAR},
+            #{borrowAmount,jdbcType=VARCHAR}, #{productId,jdbcType=INTEGER}
+        FROM dual
+        WHERE NOT exists(SELECT 1 FROM pay_order_notify
+                          WHERE borrow_order_uuid = #{borrowOrderUuid,jdbcType=VARCHAR})
+    </insert>
 
 </mapper>

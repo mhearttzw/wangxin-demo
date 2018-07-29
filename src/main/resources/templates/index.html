@@ -37,12 +37,17 @@
         <td data-th="" th:text="${item.getInterestRate()}"></td>
         <td data-th="" th:text="${item.getPaybackMethod()}"></td>
         <td data-th="" th:text="${item.getPersonJoined()}"></td>
+        <td class="borrowButton" th:data-th="${item.getId()}" th:text="借款" onclick="borrowProduct(this)"></td>
         <td class="editButton" th:data-th="${item.getId()}" th:text="编辑" onclick="editProduct(this)"></td>
         <td class="deleteButton" th:data-th="${item.getId()}" th:text="删除" onclick="deleteProduct(this)"></td>
     </tr>
 </table>
 
 <script>
+        function borrowProduct(item) {
+            var productId = item.getAttribute("data-th");
+            window.location.href = "/product/borrow/show?id=" + productId;
+        }
         function editProduct(item) {
             var productId = item.getAttribute("data-th");
             console.log("productId:" + productId);

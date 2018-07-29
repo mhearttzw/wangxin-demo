@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Invest</title>
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+
+<form th:action="@{/product/order/pay}" method="post">
+    <input type="hidden" name="borrowOrderUuid" th:value="${borrowOrderInfo.getBorrowOrderUuid()}"/>
+    <input type="hidden" name="borrowAmount" th:value="${borrowOrderInfo.getBorrowAmount()}"/>
+    <input type="hidden" name="productId" th:value="${borrowOrderInfo.getProductId()}">
+    <input id="payOrderButton" type="submit" value="确认支付"/>
+</form>
+
+
+<script>
+    window.onload = function (e) {
+
+    }
+
+</script>
+</body>
+</html>

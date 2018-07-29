@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.wangxin.springboot.common.annotation.Log;
 import com.wangxin.springboot.common.util.LogAnnotationWrapperUtil;
 import com.wangxin.springboot.mapper.UserMapper;
+import com.wangxin.springboot.model.BorrowOrder;
+import com.wangxin.springboot.model.PayOrderNotify;
 import com.wangxin.springboot.model.Product;
 import com.wangxin.springboot.service.UserService;
 import javassist.NotFoundException;
@@ -100,6 +102,27 @@ public class UserServiceImpl implements UserService {
         if (flag==1 && srt.hasKey(key)) {
             srt.delete(key);
             LogAnnotationWrapperUtil.get().setLog("删除产品列表缓存！");
+        }
+        return flag;
+    }
+
+    @Log(logStr = "生成产品订单")
+    @Override
+    public int borrowProduct(BorrowOrder product) throws NotFoundException {
+        int flag = userMapper.insertBorrowOrder(product);
+        if (flag == 1) {
+            LogAnnotationWrapperUtil.get().setLog("产品订单创建成功");
+        }
+        return flag;
+    }
+
+    @Log(logStr = "完成订单支付")
+    @Override
+    public int payBorrowOrder(PayOrderNotify payOrderNotify) {
+        // TODO 这里用插入支付记录来替代真实环境中的支付场景
+        int flag = userMapper.insertPayOrder(payOrderNotify);
+        if (flag == 1) {
+            userMapper.updateBorrowOrder(1);
         }
         return flag;
     }
