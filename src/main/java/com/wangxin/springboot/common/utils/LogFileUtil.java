@@ -1,4 +1,4 @@
-package com.wangxin.springboot.common.util;
+package com.wangxin.springboot.common.utils;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -15,7 +15,7 @@ public class LogFileUtil {
 
     public static void write(String s) {
         //使用相对路径，日志文件在项目内
-        String filepath="E:\\code repository\\github\\log\\log.txt";
+        String filepath="E:/code repository/github/log/wangxin-demo/log.txt";
         //获得当前系统时间
         Date date=new Date();
         SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

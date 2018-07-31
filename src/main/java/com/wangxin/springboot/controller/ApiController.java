@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.wangxin.springboot.common.annotation.Log;
 import com.wangxin.springboot.common.constant.UserResult;
 import com.wangxin.springboot.common.constant.UserResultConstant;
-import com.wangxin.springboot.common.util.CommonUtil;
-import com.wangxin.springboot.common.util.LogAnnotationWrapperUtil;
+import com.wangxin.springboot.common.utils.CommonUtil;
+import com.wangxin.springboot.common.utils.LogAnnotationWrapperUtil;
 import com.wangxin.springboot.model.BorrowOrder;
 import com.wangxin.springboot.model.PayOrderNotify;
 import com.wangxin.springboot.model.Product;
@@ -14,14 +14,14 @@ import com.wangxin.springboot.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import javassist.NotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.List;
-import java.util.UUID;
 
 @EnableSwagger2  //启动swagger注解
 //定义名称，如果没有定义，则默认显示类名
@@ -29,6 +29,8 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api")
 public class ApiController {
+
+    protected static Logger logger = LoggerFactory.getLogger(ApiOperation.class);
 
     @Autowired
     UserService userService;
@@ -46,7 +48,7 @@ public class ApiController {
     @ApiOperation(value = "欢迎方法，返回字符串！") //描述方法的作用
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
     public String say() throws NotFoundException {
-        LogAnnotationWrapperUtil.get().setLog("这是api接口的say方法！");
+        logger.info("这是api接口的say方法！");
         return "Hello spring boot!" + merchandise.getCar();
     }
 

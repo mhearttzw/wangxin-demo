@@ -1,16 +1,17 @@
 package com.wangxin.springboot.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.wangxin.springboot.common.annotation.Log;
 import com.wangxin.springboot.common.constant.UserResult;
-import com.wangxin.springboot.common.constant.UserResultConstant;
-import com.wangxin.springboot.common.util.CommonUtil;
+import com.wangxin.springboot.common.utils.CommonUtil;
+import com.wangxin.springboot.common.utils.LogAnnotationWrapperUtil;
 import com.wangxin.springboot.model.BorrowOrder;
 import com.wangxin.springboot.model.PayOrderNotify;
 import com.wangxin.springboot.model.Product;
 import com.wangxin.springboot.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import javassist.NotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,16 +22,19 @@ import java.util.List;
 @Controller
 public class UserController {
 
+    protected static Logger logger = LoggerFactory.getLogger(UserController.class);
+
     @Autowired
     private UserService userService;
 
     /**
      * 查询所有产品列表
      */
-    @Log(logStr = "aop日志测试！")
+    @Log(logStr = "首页")
     @RequestMapping(value = "/product/all")
     public String selectProductAll(Model model) throws NotFoundException {
         model.addAttribute("productList", userService.selectProductAll());
+        logger.info("函数功能：" + "访问产品列表首页！");
         return "index";
     }
 
@@ -100,11 +104,13 @@ public class UserController {
     /**
      * 增加产品
      */
+    @Log(logStr = "aop日志测试！")
     @RequestMapping(value = "/product/insert", method = RequestMethod.POST)
     public String showInsertProduct(Model model,
                                 @ModelAttribute Product product) throws NotFoundException {
         int result = userService.insertProduct(product);
         if (result == 1) {
+            logger.info("增加产品！");
             List<Product> productList = userService.selectProductAll();
             model.addAttribute("productList", productList);
             return "index";
@@ -134,13 +140,10 @@ public class UserController {
     @RequestMapping(value = "/product/order/pay/show", method = RequestMethod.POST)
     public String borrowProductById(Model model,
                                         @RequestParam("productId") int productId,
-                                        @RequestParam("name") String name,
-                                        @RequestParam("interestRate") double interestRate,
-                                        @RequestParam("investmentHorizon") int investmentHorizon,
-                                        @RequestParam("paybackMethod") int paybackMethod,
                                         @RequestParam("borrowAmount") double borrowAmount) throws NotFoundException {
         BorrowOrder borrowOrder = new BorrowOrder();
         String borrowOrderUuid = CommonUtil.getUUID();
+        borrowOrder.setUserUuid("ad");
         borrowOrder.setBorrowOrderUuid(borrowOrderUuid);
         borrowOrder.setBorrowAmount(borrowAmount);
         borrowOrder.setProductId(productId);

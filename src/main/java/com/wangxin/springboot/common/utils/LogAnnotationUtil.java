@@ -1,4 +1,4 @@
-package com.wangxin.springboot.common.util;
+package com.wangxin.springboot.common.utils;
 
 import javassist.*;
 import javassist.bytecode.AnnotationsAttribute;
@@ -60,6 +60,15 @@ public class LogAnnotationUtil {
         }
     }
 
+    /**
+     * 获取注解上的属性值
+     * @param className
+     * @param methodName
+     * @param annoName
+     * @param fieldName
+     * @return
+     * @throws NotFoundException
+     */
     public String getAnnotationFieldValue(String className, String methodName, String annoName,
                                           String fieldName) throws NotFoundException {
         ClassPool classPool = ClassPool.getDefault();

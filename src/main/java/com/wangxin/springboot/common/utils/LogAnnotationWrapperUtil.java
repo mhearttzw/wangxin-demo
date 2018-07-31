@@ -1,4 +1,4 @@
-package com.wangxin.springboot.common.util;
+package com.wangxin.springboot.common.utils;
 
 import com.wangxin.springboot.common.annotation.Log;
 import javassist.NotFoundException;

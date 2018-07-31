@@ -28,6 +28,7 @@
         <th>利率</th>
         <th>还款方式</th>
         <th>加入人数</th>
+        <th>购买</th>
         <th>编辑</th>
         <th>删除</th>
     </tr>
@@ -37,7 +38,7 @@
         <td data-th="" th:text="${item.getInterestRate()}"></td>
         <td data-th="" th:text="${item.getPaybackMethod()}"></td>
         <td data-th="" th:text="${item.getPersonJoined()}"></td>
-        <td class="borrowButton" th:data-th="${item.getId()}" th:text="借款" onclick="borrowProduct(this)"></td>
+        <td class="borrowButton" th:data-th="${item.getId()}" th:text="购买" onclick="borrowProduct(this)"></td>
         <td class="editButton" th:data-th="${item.getId()}" th:text="编辑" onclick="editProduct(this)"></td>
         <td class="deleteButton" th:data-th="${item.getId()}" th:text="删除" onclick="deleteProduct(this)"></td>
     </tr>

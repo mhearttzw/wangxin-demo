@@ -1,4 +1,4 @@
-package com.wangxin.springboot.common.util;
+package com.wangxin.springboot.common.utils;
 
 import java.util.UUID;
 

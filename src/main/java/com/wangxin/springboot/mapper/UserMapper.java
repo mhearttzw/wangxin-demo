@@ -48,10 +48,15 @@ public interface UserMapper {
     /**
      * 更新借款订单信息
      */
-    int updateBorrowOrder(@Param("state") int state);
+    int updateBorrowOrder(@Param("borrowOrderUuid") String borrowOrderUuid, @Param("state") int state);
 
     /**
      * 插入支付订单信息
      */
     int insertPayOrder(PayOrderNotify payOrderNotify);
+
+    /**
+     * 查询支付订单信息
+     */
+    int selectPayOrderByBorrowOrderUuid(@Param("borrowOrderUuid") String borrowOrderUuid);
 }

@@ -86,7 +86,7 @@
     <insert id="insertBorrowOrder" parameterType="com.wangxin.springboot.model.BorrowOrder">
         INSERT into borrow_order
         (borrow_order_uuid, user_uuid, borrow_amount, product_id, state)
-        SELECT #{borrowOrderUuid,jdbcType=VARCHAR}, #{user_uuid,jdbcType=VARCHAR},
+        SELECT #{borrowOrderUuid,jdbcType=VARCHAR}, #{userUuid,jdbcType=VARCHAR},
             #{borrowAmount,jdbcType=DECIMAL}, #{productId,jdbcType=INTEGER},
             #{state,jdbcType=TINYINT}
         FROM dual
@@ -95,16 +95,18 @@
     </insert>
 
     <!-- 查询订单是否存在-->
-    <select id="selectBorrowOrderAmount">
+    <select id="selectBorrowOrderAmount" resultType="java.lang.Integer">
         SELECT COUNT(*) FROM borrow_order
         WHERE borrow_order_uuid = #{borrowOrderUuid,jdbcType=VARCHAR}
     </select>
 
-    <update id="updateBorrowOrderToFinished">
-        UPDATE borrow_order SET state = #{state,jdbcType=TINYINT};
+    <update id="updateBorrowOrder">
+        UPDATE borrow_order SET state = #{state,jdbcType=TINYINT}
+        WHERE borrow_order_uuid = #{borrowOrderUuid,jdbcType=VARCHAR} AND
+            state = 0;
     </update>
 
-    <!-- -->
+    <!-- 插入支付记录，用来模拟真实支付场景 -->
     <insert id="insertPayOrder" parameterType="com.wangxin.springboot.model.PayOrderNotify">
         INSERT INTO pay_order_notify
         (borrow_order_uuid, user_uuid, borrow_amount, product_id)
@@ -114,5 +116,11 @@
         WHERE NOT exists(SELECT 1 FROM pay_order_notify
                           WHERE borrow_order_uuid = #{borrowOrderUuid,jdbcType=VARCHAR})
     </insert>
+
+    <!-- 查询支付订单信息 -->
+    <select id="selectPayOrderByBorrowOrderUuid" resultType="java.lang.Integer">
+        SELECT count(*) FROM pay_order_notify
+        WHERE borrow_order_uuid = #{borrowOrderUuid,jdbcType=VARCHAR}
+    </select>
 
 </mapper>

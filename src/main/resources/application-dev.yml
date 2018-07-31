@@ -36,3 +36,7 @@ content: "x: ${x}, y: ${y}"
 product:
   car: 1
   bed: 2
+
+## 日志 ##
+logging:
+  config: classpath:config/logback-dev.xml

@@ -13,7 +13,11 @@
     <input type="hidden" name="borrowOrderUuid" th:value="${borrowOrderInfo.getBorrowOrderUuid()}"/>
     <input type="hidden" name="borrowAmount" th:value="${borrowOrderInfo.getBorrowAmount()}"/>
     <input type="hidden" name="productId" th:value="${borrowOrderInfo.getProductId()}">
-    <input id="payOrderButton" type="submit" value="确认支付"/>
+    <div class="main">
+        <div class="sub-main">
+            <input class="button-one" id="payOrderButton" type="submit" value="确认支付"/>
+        </div>
+    </div>
 </form>
 
 

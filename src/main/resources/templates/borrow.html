@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<form th:action="@{/product/borrow}" method="post">
+<form th:action="@{/product/order/pay/show}" method="post">
     <table class="rwd-table">
         <tr>
             <th>产品名称</th>
@@ -17,15 +17,23 @@
             <th>利率</th>
             <th>还款方式</th>
             <th>购买金额</th>
-            <th>出借</th>
+            <th>确认购买</th>
         </tr>
         <tr th:each="item : ${productList}" >
-            <td data-th="" th:text="${item.getName()}"></td>
-            <td data-th="" th:text="${item.getInvestmentHorizon()}"></td>
-            <td data-th="" th:text="${item.getInterestRate()}"></td>
-            <td data-th="" th:text="${item.getPaybackMethod()}"></td>
+            <td th:text="${item.getName()}">
+                <input type="hidden" name="name" th:value="${item.getName()}">
+            </td>
+            <td th:text="${item.getInvestmentHorizon()}">
+                <input type="hidden" name="investmentHorizon" th:value="${item.getInvestmentHorizon()}">
+            </td>
+            <td th:text="${item.getInterestRate()}">
+                <input type="hidden" name="interestRate" th:value="${item.getInterestRate()}">
+            </td>
+            <td th:text="${item.getPaybackMethod()}">
+                <input type="hidden" name="paybackMethod" th:value="${item.getPaybackMethod()}">
+            </td>
             <td>
-                <input type="text" name="borrow_amount" th:value="0.00"/>
+                <input type="text" name="borrowAmount" th:value="0.00"/>
             </td>
             <td th:data-th="${item.getId()}">
                 <input type="hidden" name="productId" th:value="${item.getId()}">

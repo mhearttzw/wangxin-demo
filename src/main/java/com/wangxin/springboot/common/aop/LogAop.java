@@ -1,19 +1,18 @@
 package com.wangxin.springboot.common.aop;
 
 import com.wangxin.springboot.common.annotation.Log;
-import com.wangxin.springboot.common.util.LogAnnotationUtil;
-import com.wangxin.springboot.common.util.LogFileUtil;
+import com.wangxin.springboot.common.utils.LogAnnotationUtil;
+import com.wangxin.springboot.common.utils.LogFileUtil;
 import javassist.NotFoundException;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.util.StringUtils;
-
-import java.lang.reflect.Method;
 
 @Component
 @Aspect
@@ -28,7 +27,7 @@ public class LogAop {
 
     }
 
-    @After(value = "pointcut()")
+    @Before(value = "pointcut()")
     public void After(JoinPoint joinPoint) throws NotFoundException, ClassNotFoundException {
         // 拿到切点的类名、方法名、目标方法的参数对象
         String className = joinPoint.getTarget().getClass().getName();
@@ -37,22 +36,22 @@ public class LogAop {
         String logStr = LogAnnotationUtil.getLogAnnotationUtil().getAnnotationFieldValue(className,
                 methodName, Log.class.getName(), "logStr");
         if (!StringUtils.isEmpty(logStr)) {
-            logger.error("\n类名：" + className);
-            logger.error("函数名：" + methodName);
+            logger.info("\n类["+className+"]-方法["+methodName+"]开始执行------");
+            // logger.error("函数名：" + methodName);
             for (int i = 0; i < args.length; i++) {
-                logger.error("参数名：" + args[i]);
+                logger.info("参数名：" + args[i]);
             }
             // TODO debug级别日志什么时候会出现呢？
-            logger.debug("获取日志：" + logStr);
-            logger.error("详细日志信息：" + logStr);
+            //logger.debug("获取日志：" + logStr);
+            //logger.info("详细日志信息：" + logStr);
             // 数据库、文件记录操作
             // TODO
-            LogFileUtil.write("类名：" + className + "\r\n");
+            /*LogFileUtil.write("类名：" + className + "\r\n");
             LogFileUtil.write("函数名：" + methodName + "\r\n");
             for (int i = 0; i < args.length; i++) {
-                LogFileUtil.write("参数名：" + args[i] + "\r\n");
+                LogFileUtil.write("参数名：" + args[i]);
             }
-            LogFileUtil.write("\r\n详细日志信息：" + logStr);
+            LogFileUtil.write("\r\n功能：" + logStr);*/
         }
     }
 

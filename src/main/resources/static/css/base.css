@@ -210,6 +210,6 @@ a:hover{
 }
 
 /* 个人样式 */
-.editButton, .deleteButton:hover{
+.editButton, .deleteButton, .borrowButton:hover{
     cursor: pointer;
 }
