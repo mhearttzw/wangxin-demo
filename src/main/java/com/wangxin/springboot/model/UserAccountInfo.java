@@ -7,6 +7,14 @@ public class UserAccountInfo {
   private String userUuid;
   private double totalAssets;
 
+  @Override
+  public String toString() {
+    return "UserAccountInfo{" +
+            "id=" + id +
+            ", userUuid='" + userUuid + '\'' +
+            ", totalAssets=" + totalAssets +
+            '}';
+  }
 
   public Integer getId() {
     return id;

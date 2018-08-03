@@ -16,6 +16,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -115,6 +116,8 @@ public class UserServiceImpl implements UserService {
         return flag;
     }
 
+    // 加入事务注解
+    @Transactional
     @Log(logStr = "完成订单支付")
     @Override
     public int payBorrowOrder(PayOrderNotify payOrderNotify) {

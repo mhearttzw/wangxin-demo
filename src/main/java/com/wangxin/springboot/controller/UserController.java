@@ -3,10 +3,10 @@ package com.wangxin.springboot.controller;
 import com.wangxin.springboot.common.annotation.Log;
 import com.wangxin.springboot.common.constant.UserResult;
 import com.wangxin.springboot.common.utils.CommonUtil;
-import com.wangxin.springboot.common.utils.LogAnnotationWrapperUtil;
 import com.wangxin.springboot.model.BorrowOrder;
 import com.wangxin.springboot.model.PayOrderNotify;
 import com.wangxin.springboot.model.Product;
+import com.wangxin.springboot.repository.ProductRepository;
 import com.wangxin.springboot.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import javassist.NotFoundException;
@@ -15,8 +15,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -26,6 +28,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     /**
      * 查询所有产品列表
@@ -45,8 +50,7 @@ public class UserController {
     @RequestMapping(value = "/product/search", method = RequestMethod.GET)
     public String selectProductByName(Model model,
                                       @RequestParam("name") String name) {
-        System.out.println("name:" + name);
-        List<Product> productList = userService.selectProductByName(name);
+        List<Product> productList = productRepository.findByName(name);
         model.addAttribute("productList", productList);
         return "index";
     }
@@ -139,14 +143,17 @@ public class UserController {
     @ApiOperation("产品销售接口，负责生成订单")
     @RequestMapping(value = "/product/order/pay/show", method = RequestMethod.POST)
     public String borrowProductById(Model model,
-                                        @RequestParam("productId") int productId,
-                                        @RequestParam("borrowAmount") double borrowAmount) throws NotFoundException {
-        BorrowOrder borrowOrder = new BorrowOrder();
+                                    @Valid BorrowOrder borrowOrder,
+                                    BindingResult bindingResult) throws NotFoundException {
+        if (bindingResult.hasErrors()) {
+            System.out.println(bindingResult.getFieldError().getDefaultMessage());
+            return "error11";
+        }
         String borrowOrderUuid = CommonUtil.getUUID();
-        borrowOrder.setUserUuid("ad");
         borrowOrder.setBorrowOrderUuid(borrowOrderUuid);
-        borrowOrder.setBorrowAmount(borrowAmount);
-        borrowOrder.setProductId(productId);
+        borrowOrder.setBorrowAmount(borrowOrder.getBorrowAmount());
+        borrowOrder.setProductId(borrowOrder.getProductId());
+        borrowOrder.setUserUuid("ad");
         borrowOrder.setState(0);
         int flag = userService.borrowProduct(borrowOrder);
         if (flag == 1) {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
+<!-- scan：当scan被设置为true时，当配置文件发生改变，将会被重新加载，默认为true -->
 <configuration scan="true">
     <property name="logdir" value="E:/code repository/github/log/wangxin-demo"></property>
 

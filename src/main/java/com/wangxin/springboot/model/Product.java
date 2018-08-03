@@ -1,10 +1,16 @@
 package com.wangxin.springboot.model;
 
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.io.Serializable;
 
+@Entity
 public class Product implements Serializable{
 
+  @Id
+  @GeneratedValue
   private Integer id;
   private String name;
   private String countType;
@@ -14,7 +20,6 @@ public class Product implements Serializable{
   private Integer personJoined;
   private Integer investmentHorizon;
   private Integer paybackMethod;
-
 
   public Integer getId() {
     return id;
@@ -96,4 +101,13 @@ public class Product implements Serializable{
     this.paybackMethod = paybackMethod;
   }
 
+  public String toString() {
+    return "Product{" +
+            "id=" + id +
+            ", name=" + name + '\'' +
+            ", interestRate=" + interestRate +
+            ", investmentHorizon=" + investmentHorizon +
+            ", paymentMethod=" + paybackMethod +
+            '}';
+  }
 }

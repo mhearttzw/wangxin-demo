@@ -13,6 +13,18 @@ public class PayOrderNotify {
   private Integer productId;
   private Date createdTime;
 
+  @Override
+  public String toString() {
+    return "PayOrderNotify{" +
+            "id=" + id +
+            ", payOrderUuid='" + payOrderUuid + '\'' +
+            ", borrowOrderUuid='" + borrowOrderUuid + '\'' +
+            ", userUuid='" + userUuid + '\'' +
+            ", borrowAmount=" + borrowAmount +
+            ", productId=" + productId +
+            ", createdTime=" + createdTime +
+            '}';
+  }
 
   public Integer getId() {
     return id;

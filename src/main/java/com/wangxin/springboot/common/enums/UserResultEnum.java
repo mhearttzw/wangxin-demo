@@ -1,11 +1,11 @@
-package com.wangxin.springboot.common.constant;
+package com.wangxin.springboot.common.enums;
 
 /**
  * @created_time    2018/7/17
  * @author          echelon
  * @description     系统接口结果常量返回类
  */
-public enum UserResultConstant {
+public enum UserResultEnum {
     /**
      * 成功
      */
@@ -16,6 +16,7 @@ public enum UserResultConstant {
     /**
      * 失败
      */
+    SYSTEM_ERROR(10100, "系统错误！"),
     FAILED(10101, "failed"),
     PRODUCT_NOT_EXISTS(10102, "用户不存在！")
     ;
@@ -25,7 +26,7 @@ public enum UserResultConstant {
 
     public String msg;
 
-    UserResultConstant(int code, String msg) {
+    UserResultEnum(int code, String msg) {
         this.code = code;
         this.msg = msg;
     }

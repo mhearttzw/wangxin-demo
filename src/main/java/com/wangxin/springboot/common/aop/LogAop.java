@@ -5,10 +5,7 @@ import com.wangxin.springboot.common.utils.LogAnnotationUtil;
 import com.wangxin.springboot.common.utils.LogFileUtil;
 import javassist.NotFoundException;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -36,23 +33,19 @@ public class LogAop {
         String logStr = LogAnnotationUtil.getLogAnnotationUtil().getAnnotationFieldValue(className,
                 methodName, Log.class.getName(), "logStr");
         if (!StringUtils.isEmpty(logStr)) {
-            logger.info("\n类["+className+"]-方法["+methodName+"]开始执行------");
-            // logger.error("函数名：" + methodName);
+            logger.info("类["+className+"]-方法["+methodName+"]开始执行------");
             for (int i = 0; i < args.length; i++) {
                 logger.info("参数名：" + args[i]);
             }
             // TODO debug级别日志什么时候会出现呢？
             //logger.debug("获取日志：" + logStr);
-            //logger.info("详细日志信息：" + logStr);
-            // 数据库、文件记录操作
-            // TODO
-            /*LogFileUtil.write("类名：" + className + "\r\n");
-            LogFileUtil.write("函数名：" + methodName + "\r\n");
-            for (int i = 0; i < args.length; i++) {
-                LogFileUtil.write("参数名：" + args[i]);
-            }
-            LogFileUtil.write("\r\n功能：" + logStr);*/
+            // TODO 数据库、文件记录操作
         }
+    }
+
+    @AfterReturning(returning = "object", pointcut = "pointcut()")
+    public void afterReturning(Object object) {
+        //logger.info("response={}", object);
     }
 
     // 方法后置切面

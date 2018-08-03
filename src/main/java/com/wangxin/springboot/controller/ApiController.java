@@ -3,9 +3,8 @@ package com.wangxin.springboot.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.wangxin.springboot.common.annotation.Log;
 import com.wangxin.springboot.common.constant.UserResult;
-import com.wangxin.springboot.common.constant.UserResultConstant;
+import com.wangxin.springboot.common.enums.UserResultEnum;
 import com.wangxin.springboot.common.utils.CommonUtil;
-import com.wangxin.springboot.common.utils.LogAnnotationWrapperUtil;
 import com.wangxin.springboot.model.BorrowOrder;
 import com.wangxin.springboot.model.PayOrderNotify;
 import com.wangxin.springboot.model.Product;
@@ -18,9 +17,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @EnableSwagger2  //启动swagger注解
@@ -46,18 +47,18 @@ public class ApiController {
 
     @Log(logStr = "aop日志测试！")
     @ApiOperation(value = "欢迎方法，返回字符串！") //描述方法的作用
-    @RequestMapping(value = "/hello", method = RequestMethod.GET)
+    @GetMapping(value = "/hello")
     public String say() throws NotFoundException {
         logger.info("这是api接口的say方法！");
         return "Hello spring boot!" + merchandise.getCar();
     }
 
     @ApiOperation(value = "查询产品总数！")
-    @RequestMapping(value = "/product/show/all", method = RequestMethod.GET)
+    @GetMapping(value = "/product/show/all")
     public UserResult selectProductAll() throws NotFoundException {
         UserResult urs;
         List<Product> productList = userService.selectProductAll();
-        urs = new UserResult(UserResultConstant.SUCCESS, productList);
+        urs = new UserResult(UserResultEnum.SUCCESS, productList);
         return urs;
     }
 
@@ -66,12 +67,12 @@ public class ApiController {
     public UserResult selectProductByName(@PathVariable("name") String name) {
         UserResult urs;
         List<Product> productList = userService.selectProductByName(name);
-        urs = new UserResult(UserResultConstant.SUCCESS, productList);
+        urs = new UserResult(UserResultEnum.SUCCESS, productList);
         return urs;
     }
 
     @ApiOperation(value = "添加产品")
-    @RequestMapping(value = "/product/insert", method = RequestMethod.POST)
+    @PostMapping(value = "/product/insert")
     public UserResult showInsertProduct(@RequestParam("name") String name,
                                         @RequestParam("interestRate") double interestRate,
                                         @RequestParam("investmentHorizon") int investmentHorizon,
@@ -84,9 +85,9 @@ public class ApiController {
         product.setPaybackMethod(paybackMethod);
         int result = userService.insertProduct(product);
         if (result == 1) {
-            urs = new UserResult(UserResultConstant.SUCCESS, "新增产品成功");
+            urs = new UserResult(UserResultEnum.SUCCESS, "新增产品成功");
         } else {
-            urs = new UserResult(UserResultConstant.FAILED, "新增产品失败");
+            urs = new UserResult(UserResultEnum.FAILED, "新增产品失败");
         }
         return urs;
     }
@@ -106,36 +107,45 @@ public class ApiController {
         product.setPaybackMethod(paybackMethod);
         int result = userService.updateProductById(product);
         if (result == 1) {
-            urs = new UserResult(UserResultConstant.SUCCESS, "更新产品成功");
+            urs = new UserResult(UserResultEnum.SUCCESS, "更新产品成功");
         } else {
-            urs = new UserResult(UserResultConstant.FAILED, "更新产品失败");
+            urs = new UserResult(UserResultEnum.FAILED, "更新产品失败");
         }
         return urs;
     }
 
     @ApiOperation("产品销售接口，负责生成订单")
     @RequestMapping(value = "/product/borrow", method = RequestMethod.POST)
-    public UserResult borrowProductById(@RequestParam("productId") int productId,
+    public UserResult borrowProductById(@Valid BorrowOrder borrowOrder, BindingResult bindingResult
+                                        /*@RequestParam("productId") int productId,
                                         @RequestParam("name") String name,
                                         @RequestParam("interestRate") double interestRate,
                                         @RequestParam("investmentHorizon") int investmentHorizon,
                                         @RequestParam("paybackMethod") int paybackMethod,
-                                        @RequestParam("borrowAmount") double borrowAmount) throws NotFoundException {
+                                        @RequestParam("borrowAmount") double borrowAmount*/) throws NotFoundException {
         UserResult urs;
-        BorrowOrder borrowOrder = new BorrowOrder();
+        if (bindingResult.hasErrors()) {
+            System.out.println(bindingResult.getFieldError().getDefaultMessage());
+            urs = new UserResult(UserResultEnum.FAILED, "传入参数错误！");
+            return urs;
+        }
+
+        //BorrowOrder borrowOrder = new BorrowOrder();
         String borrowOrderUuid = CommonUtil.getUUID();
         borrowOrder.setBorrowOrderUuid(borrowOrderUuid);
-        borrowOrder.setBorrowAmount(borrowAmount);
-        borrowOrder.setProductId(productId);
+        borrowOrder.setBorrowAmount(borrowOrder.getBorrowAmount());
+        borrowOrder.setProductId(borrowOrder.getProductId());
+        //borrowOrder.setBorrowAmount(borrowAmount);
+        //borrowOrder.setProductId(productId);
         borrowOrder.setUserUuid("ad");
         borrowOrder.setState(0);
         int flag = userService.borrowProduct(borrowOrder);
         JSONObject result = new JSONObject();
         if (flag == 1) {
             result.put("order_uuid", borrowOrderUuid);
-            urs = new UserResult(UserResultConstant.SUCCESS, result);
+            urs = new UserResult(UserResultEnum.SUCCESS, result);
         } else {
-            urs = new UserResult(UserResultConstant.FAILED, "订单已创建");
+            urs = new UserResult(UserResultEnum.FAILED, "订单已创建");
         }
         return urs;
     }
@@ -155,9 +165,9 @@ public class ApiController {
         payOrderNotify.setUserUuid("ad");
         int flag = userService.payBorrowOrder(payOrderNotify);
         if (flag!=0 || flag != 1) {
-            urs = new UserResult(UserResultConstant.FAILED, "支付失败！");
+            urs = new UserResult(UserResultEnum.FAILED, "支付失败！");
         } else {
-            urs = new UserResult(UserResultConstant.SUCCESS, "支付成功！");
+            urs = new UserResult(UserResultEnum.SUCCESS, "支付成功！");
         }
         return urs;
     }

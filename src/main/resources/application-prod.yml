@@ -7,15 +7,28 @@ spring:
     url: jdbc:mysql://localhost:3306/wangxin?characterEncoding=UTF-8
     username: root
     password: root
+  # jpa配置
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  # redis数据库索引（默认为0） #
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password: 123456
+  # thymeleaf模板 #
+  thymeleaf:
+    mode: HTML5
+    encoding: UTF-8
+    servlet:
+      content-type: text/html
 
 ## server port ##
 server:
   port: 8082
 
-## 测试value注解注入 ##
-x: echlon
-y: smash
-content: "x: ${x}, y: ${y}"
-product:
-  car: 1
-  bed: 2
+## 日志 ##
+logging:
+  config: classpath:config/logback-dev.xml
