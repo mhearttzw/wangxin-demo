@@ -116,27 +116,18 @@ public class ApiController {
 
     @ApiOperation("产品销售接口，负责生成订单")
     @RequestMapping(value = "/product/borrow", method = RequestMethod.POST)
-    public UserResult borrowProductById(@Valid BorrowOrder borrowOrder, BindingResult bindingResult
-                                        /*@RequestParam("productId") int productId,
-                                        @RequestParam("name") String name,
-                                        @RequestParam("interestRate") double interestRate,
-                                        @RequestParam("investmentHorizon") int investmentHorizon,
-                                        @RequestParam("paybackMethod") int paybackMethod,
-                                        @RequestParam("borrowAmount") double borrowAmount*/) throws NotFoundException {
+    public UserResult borrowProductById(@Valid BorrowOrder borrowOrder,
+                                        BindingResult bindingResult) throws NotFoundException {
         UserResult urs;
         if (bindingResult.hasErrors()) {
             System.out.println(bindingResult.getFieldError().getDefaultMessage());
             urs = new UserResult(UserResultEnum.FAILED, "传入参数错误！");
             return urs;
         }
-
-        //BorrowOrder borrowOrder = new BorrowOrder();
         String borrowOrderUuid = CommonUtil.getUUID();
         borrowOrder.setBorrowOrderUuid(borrowOrderUuid);
         borrowOrder.setBorrowAmount(borrowOrder.getBorrowAmount());
         borrowOrder.setProductId(borrowOrder.getProductId());
-        //borrowOrder.setBorrowAmount(borrowAmount);
-        //borrowOrder.setProductId(productId);
         borrowOrder.setUserUuid("ad");
         borrowOrder.setState(0);
         int flag = userService.borrowProduct(borrowOrder);

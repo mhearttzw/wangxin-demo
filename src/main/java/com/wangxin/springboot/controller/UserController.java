@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,18 +36,18 @@ public class UserController {
     /**
      * 查询所有产品列表
      */
-    @Log(logStr = "首页")
+    @Log(logStr = "查询所有产品列表")
     @RequestMapping(value = "/product/all")
     public String selectProductAll(Model model) throws NotFoundException {
-        model.addAttribute("productList", userService.selectProductAll());
-        logger.info("函数功能：" + "访问产品列表首页！");
+        List<Product> productList = productRepository.findAll();
+        model.addAttribute("productList", productList);
         return "index";
     }
 
     /**
      * 根据名称查询产品
      */
-    @Log(logStr = "aop日志测试！")
+    @Log(logStr = "根据名称查询产品")
     @RequestMapping(value = "/product/search", method = RequestMethod.GET)
     public String selectProductByName(Model model,
                                       @RequestParam("name") String name) {
@@ -58,11 +59,11 @@ public class UserController {
     /**
      * 产品编辑页展示
      */
-    @Log(logStr = "aop日志测试！")
+    @Log(logStr = "产品编辑页展示")
     @RequestMapping(value = "/product/edit/show", method = RequestMethod.GET)
     public String showProductById(Model model,
                            @RequestParam("id") int id) {
-        List<Product> productList = userService.selectProductById(id);
+        List<Product> productList = productRepository.findById(id);
         model.addAttribute("productList", productList);
         return "edit";
     }
@@ -70,7 +71,7 @@ public class UserController {
     /**
      * 产品编辑提交
      */
-    @Log(logStr = "aop日志测试！")
+    @Log(logStr = "产品编辑提交")
     @RequestMapping(value = "/product/edit", method = RequestMethod.POST)
     public String updateProductById(Model model,
                                     @ModelAttribute Product product) throws NotFoundException {
@@ -108,13 +109,12 @@ public class UserController {
     /**
      * 增加产品
      */
-    @Log(logStr = "aop日志测试！")
+    @Log(logStr = "增加产品")
     @RequestMapping(value = "/product/insert", method = RequestMethod.POST)
     public String showInsertProduct(Model model,
                                 @ModelAttribute Product product) throws NotFoundException {
         int result = userService.insertProduct(product);
         if (result == 1) {
-            logger.info("增加产品！");
             List<Product> productList = userService.selectProductAll();
             model.addAttribute("productList", productList);
             return "index";
